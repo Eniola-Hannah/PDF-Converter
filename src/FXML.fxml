@@ -21,7 +21,7 @@
       </VBox>
       <HBox layoutX="48.0" layoutY="145.0" prefHeight="93.0" prefWidth="529.0">
          <children>
-            <Button fx:id="choosefile" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" style="-fx-background-color: blue;" text="Choose" textFill="WHITE">
+            <Button fx:id="choosefile" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleOpenFileAction" style="-fx-background-color: blue;" text="Choose" textFill="WHITE">
                <font>
                   <Font name="Century" size="17.0" />
                </font>
