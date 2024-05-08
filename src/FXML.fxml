@@ -27,7 +27,7 @@
                </font>
             </Button>
             <VBox prefHeight="93.0" prefWidth="24.0" />
-            <TextField prefHeight="35.0" prefWidth="423.0" />
+            <TextField fx:id="filePathTextField" prefHeight="35.0" prefWidth="423.0" />
          </children>
       </HBox>
       <HBox prefHeight="75.0" prefWidth="600.0">
