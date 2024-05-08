@@ -22,7 +22,7 @@
       </VBox>
       <HBox prefHeight="75.0" prefWidth="600.0">
          <children>
-            <Label prefHeight="47.0" prefWidth="603.0" text=" GROUP 4- PDF DECRYPTER" textAlignment="CENTER" textFill="BLUE">
+            <Label prefHeight="47.0" prefWidth="603.0" text=" GROUP 4- PDF CONVERTER" textAlignment="CENTER" textFill="BLUE">
                <font>
                   <Font name="Century Schoolbook" size="41.0" />
                </font>
