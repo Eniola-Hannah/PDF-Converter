@@ -5,7 +5,9 @@
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 
 /**
  * FXML Controller class
@@ -19,9 +21,15 @@ public class FXMLController implements Initializable {
      * @param url
      * @param rb
      */
+    @FXML
+    private Button choosefile;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        choosefile.setOnAction(event -> {
+            System.out.println("Button clicked!");
+            // Additional button click handling code...
+        });
     }    
     
 }
