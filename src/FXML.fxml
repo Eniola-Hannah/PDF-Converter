@@ -38,7 +38,7 @@
          <children>
             <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" style="-fx-background-color: blue;" text="Choose" textFill="WHITE">
                <font>
-                  <Font name="System Italic" size="18.0" />
+                  <Font name="Century" size="17.0" />
                </font>
             </Button>
             <VBox prefHeight="93.0" prefWidth="24.0" />
