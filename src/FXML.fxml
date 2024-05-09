@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,7 +15,7 @@
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="489.0" text="SELECT PDF FILE:" textAlignment="CENTER" textFill="#ed44bd">
                <font>
-                  <Font name="System Italic" size="21.0" />
+                  <Font name="Century" size="28.0" />
                </font>
             </Label>
          </children>
@@ -39,7 +40,18 @@
             </Label>
          </children>
       </HBox>
-      <Button graphicTextGap="5.0" layoutX="240.0" layoutY="250.0" mnemonicParsing="false" style="-fx-background-color: #ed44bd;" text="Convert" textFill="WHITE">
+      <HBox layoutX="41.0" layoutY="224.0" prefHeight="75.0" prefWidth="541.0">
+         <children>
+            <Label text="Save as :" textFill="#ed44bd">
+               <font>
+                  <Font name="Century Schoolbook" size="20.0" />
+               </font>
+            </Label>
+            <VBox prefHeight="100.0" prefWidth="62.0" />
+            <ComboBox fx:id="myComboBox" prefHeight="35.0" prefWidth="252.0" promptText="Select a Document type..." style="-fx-border-color: white; -fx-border-radius: 10;" />
+         </children>
+      </HBox>
+      <Button graphicTextGap="5.0" layoutX="242.0" layoutY="324.0" mnemonicParsing="false" style="-fx-background-color: blue;" text="Convert" textFill="WHITE">
          <font>
             <Font name="Century" size="19.0" />
          </font>

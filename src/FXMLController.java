@@ -6,10 +6,14 @@
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
 /**
@@ -28,23 +32,28 @@ public class FXMLController implements Initializable {
     private Button choosefile;
     
     @FXML
+    private TextField filePathTextField;
+    
+    @FXML
+    private ComboBox<String> myComboBox;
+    private ObservableList<String> options = FXCollections.observableArrayList("DOcx", "Pptx", "Txt file", "Html file");
+
+
+    
+    @FXML
     void handleOpenFileAction(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
-            // Process the selected file
-            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            filePathTextField.setText(selectedFile.getAbsolutePath());
         }
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // No need to set action for choosefile/button when there's already an handler for it up
-//        choosefile.setOnAction(event -> {
-//            System.out.println("Button clicked!");
-//            // Additional button click handling code...
-//        });
+        //TODO
+        myComboBox.setItems(options);
     }    
     
     
