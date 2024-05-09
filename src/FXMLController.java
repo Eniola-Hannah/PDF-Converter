@@ -36,7 +36,7 @@ public class FXMLController implements Initializable {
     
     @FXML
     private ComboBox<String> myComboBox;
-    private ObservableList<String> options = FXCollections.observableArrayList("DOcx", "Pptx", "Txt file", "Html file");
+    private ObservableList<String> options = FXCollections.observableArrayList("Docx", "Pptx", "Txt File", "HTML File");
 
 
     
@@ -44,6 +44,9 @@ public class FXMLController implements Initializable {
     void handleOpenFileAction(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+        );
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             filePathTextField.setText(selectedFile.getAbsolutePath());
