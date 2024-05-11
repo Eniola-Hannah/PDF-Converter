@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
@@ -38,6 +39,8 @@ public class FXMLController implements Initializable {
     private ComboBox<String> myComboBox;
     private ObservableList<String> options = FXCollections.observableArrayList("Docx", "Pptx", "Txt File", "HTML File");
 
+    @FXML
+    private Label messageLabel;
 
     
     @FXML
@@ -52,6 +55,43 @@ public class FXMLController implements Initializable {
             filePathTextField.setText(selectedFile.getAbsolutePath());
         }
     }
+    
+    @FXML
+    void handleComboBoxSelection(ActionEvent event) {
+        String selectedOption = myComboBox.getValue();
+        File inputFile = new File(filePathTextField.getText());
+
+        if (selectedOption != null && inputFile.exists()) {
+            switch (selectedOption) {
+                case "Docx":
+                    convertToDocx(inputFile);
+                    break;
+//                case "Pptx":
+//                    convertToPptx(inputFile);
+//                    break;
+//                case "Txt File":
+//                    convertToTxt(inputFile);
+//                    break;
+//                case "HTML File":
+//                    convertToHtml(inputFile);
+//                    break;
+                default:
+                    messageLabel.setText("Invalid option selected");
+                    break;
+            }
+        } else {
+            messageLabel.setText("No input file selected");
+        }
+    }
+    
+    void convertToDocx(File inputFile) {
+    // Perform the conversion logic to convert the input file to a .docx format
+    // You can use external libraries or write your own conversion code here
+
+    messageLabel.setText("Converting to .docx format: " + inputFile.getAbsolutePath()+ "\n.....");
+
+    // Save the converted file or perform any other necessary actions
+}
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
