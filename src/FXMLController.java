@@ -4,6 +4,7 @@
  */
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -83,35 +84,14 @@ public class FXMLController implements Initializable {
         if (selectedOption != null && inputFile.exists()) {
             switch (selectedOption) {
                 case "Docx":
-                    messageLabel.setText("...................");
-//                    File outputDocxFile = new File("C:\\Users\\user\\Downloads"); // Specify the output file path
-//                    try {
-//                        pdftodocx.convertPdfToDocx(inputFile, outputDocxFile);
-//                        messageLabel.setText("PDF to DOCX conversion successful!");
-//                    } catch (IOException e) {
-//                        messageLabel.setText("Error during PDF to DOCX conversion: " + e.getMessage());
-//                        e.printStackTrace();
-//                    }
-                    break;
-                    
+//                    convertToDocx(inputFile);
+                    break;    
                 case "Txt File":
-                    messageLabel.setText("...................");
-                    String extractedText = extractTextFromPDF(inputFile);
-                    if (extractedText != null) {
-                        // Save the extracted text to a TXT file
-                        String txtFilePath = "C:\\\\Users\\\\user\\\\Downloads"; // Specify the desired output TXT file path
-                        try (FileWriter writer = new FileWriter(txtFilePath)) {
-                            writer.write(extractedText);
-                            messageLabel.setText("Text extracted and saved to " + txtFilePath);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            messageLabel.setText("Error saving text to TXT file.");
-                        }
-                    } else {
-                        messageLabel.setText("Error extracting text from PDF.");
-                    }
-                    break;
-                    
+                    convertToText(inputFile);
+                    break;    
+                case "HTML File":
+//                    convertToHTML(document, outputPath);
+                    break; 
                 default:
                     messageLabel.setText("Invalid option selected");
                     break;
@@ -122,26 +102,66 @@ public class FXMLController implements Initializable {
     }
     
     private String extractTextFromPDF(File pdfFile) {
-    try {
-        PDDocument document = PDDocument.load(pdfFile);
-        PDFTextStripper stripper = new PDFTextStripper();
-        String text = stripper.getText(document);
-        document.close();
-        return text;
-    } catch (IOException e) {
-        e.printStackTrace();
-        return null;
+        try {
+            PDDocument document = PDDocument.load(pdfFile);
+            PDFTextStripper stripper = new PDFTextStripper();
+            String text = stripper.getText(document);
+            document.close();
+            return text;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-}
     
+//    private void convertToWord(PDDocument document, String outputPath) throws IOException {
+//        messageLabel.setText("...................");
+//        File outputDocxFile = new File("C:\\Users\\user\\Downloads"); // Specify the output file path
+//        try {
+//        pdftodocx.convertPdfToDocx(inputFile, outputDocxFile);
+//        messageLabel.setText("PDF to DOCX conversion successful!");
+//        } catch (IOException e) {
+//        messageLabel.setText("Error during PDF to DOCX conversion: " + e.getMessage());
+//        e.printStackTrace();
+//  }
     
-    
-    void convertToDocx(File inputFile) {
- 
+    private void convertToText(File inputFile) {
+        messageLabel.setText("Converting to Text...");
+        String extractedText = extractTextFromPDF(inputFile);
+        if (extractedText != null) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Text File");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Text Files", "*.txt")
+            );
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            File outputFile = fileChooser.showSaveDialog(null);
 
-    messageLabel.setText("Converting to .docx format: " + inputFile.getAbsolutePath()+ "\n.....");
+            if (outputFile != null) {
+                try (FileWriter writer = new FileWriter(outputFile)) {
+                    writer.write(extractedText);
+                    messageLabel.setText("Text extracted and saved to " + outputFile.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    messageLabel.setText("Error saving text to TXT file.");
+                }
+            } else {
+                messageLabel.setText("Output file not selected.");
+            }
+        } else {
+            messageLabel.setText("Error extracting text from PDF.");
+        }
+    }
+    
+    
+//    private void convertToHTML(PDDocument document, String outputPath) throws IOException {
+//        PDFTextStripper stripper = new PDFTextStripper();
+//        String html = "<html><body>" + stripper.getText(document) + "</body></html>";
+//        FileOutputStream out = new FileOutputStream(outputPath);
+//        out.write(html.getBytes());
+//        out.close();
+//    }
 
-}
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
