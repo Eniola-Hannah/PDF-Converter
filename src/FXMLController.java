@@ -90,7 +90,7 @@ public class FXMLController implements Initializable {
                     convertToText(inputFile);
                     break;    
                 case "HTML File":
-//                    convertToHTML(document, outputPath);
+                    convertToHTML(inputFile);
                     break; 
                 default:
                     messageLabel.setText("Invalid option selected");
@@ -154,15 +154,40 @@ public class FXMLController implements Initializable {
     }
     
     
-//    private void convertToHTML(PDDocument document, String outputPath) throws IOException {
-//        PDFTextStripper stripper = new PDFTextStripper();
-//        String html = "<html><body>" + stripper.getText(document) + "</body></html>";
-//        FileOutputStream out = new FileOutputStream(outputPath);
-//        out.write(html.getBytes());
-//        out.close();
-//    }
+    private void convertToHTML(File inputFile) {
+        messageLabel.setText("Converting to HTML...");
+        try {
+            PDDocument document = PDDocument.load(inputFile);
+            PDFTextStripper stripper = new PDFTextStripper();
+            String html = "<html><body>" + stripper.getText(document) + "</body></html>";
+            document.close();
 
-    
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save HTML File");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("HTML Files", "*.html")
+            );
+            
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            File outputFile = fileChooser.showSaveDialog(null);
+
+            if (outputFile != null) {
+                try (FileWriter writer = new FileWriter(outputFile)) {
+                    writer.write(html);
+                    messageLabel.setText("HTML file saved to " + outputFile.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    messageLabel.setText("Error saving HTML file.");
+                }
+            } else {
+                messageLabel.setText("Output file not selected.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            messageLabel.setText("Error converting PDF to HTML.");
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //TODO
