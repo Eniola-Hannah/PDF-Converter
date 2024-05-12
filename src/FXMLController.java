@@ -21,6 +21,12 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xslf.usermodel.XSLFSlide;
+import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
+import org.apache.poi.xslf.usermodel.XSLFTextParagraph;
+import org.apache.poi.xslf.usermodel.XSLFTextRun;
+import org.apache.poi.xslf.usermodel.XSLFTextShape;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -67,6 +73,7 @@ public class FXMLController implements Initializable {
         }
     }
     
+    
     @FXML
     void handleComboBoxSelection(ActionEvent event) {
         String selectedOption = myComboBox.getValue();
@@ -78,6 +85,7 @@ public class FXMLController implements Initializable {
             messageLabel.setText("No input file selected");
         }
     }
+    
     
     @FXML
     private void handleConvertButtonAction(ActionEvent event) {
@@ -95,6 +103,9 @@ public class FXMLController implements Initializable {
                 case "HTML File":
                     convertToHTML(inputFile);
                     break; 
+                case "Pptx":
+                    convertToPptx(inputFile);
+                    break;
                 default:
                     messageLabel.setText("Invalid option selected");
                     break;
@@ -103,6 +114,7 @@ public class FXMLController implements Initializable {
             messageLabel.setText("No input file selected");
         }
     }
+    
     
     private String extractTextFromPDF(File pdfFile) {
         try {
@@ -116,7 +128,6 @@ public class FXMLController implements Initializable {
             return null;
         }
     }
-    
 
     
     private void convertToText(File inputFile) {
@@ -146,6 +157,7 @@ public class FXMLController implements Initializable {
             messageLabel.setText("Error extracting text from PDF.");
         }
     }
+    
     
     private void convertToDocx(File inputFile) {
         messageLabel.setText("Converting to DOCX...");
@@ -217,12 +229,60 @@ public class FXMLController implements Initializable {
             messageLabel.setText("Error converting PDF to HTML.");
         }
     }
+    
+    
+    private void convertToPptx(File inputFile) {
+        messageLabel.setText("Converting to PPTX...");
+        try {
+            PDDocument document = PDDocument.load(inputFile);
+            PDFTextStripper stripper = new PDFTextStripper();
+            String text = stripper.getText(document);
+            document.close();
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save PPTX File");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("PPTX Files", "*.pptx")
+            );
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            File outputFile = fileChooser.showSaveDialog(null);
+
+            if (outputFile != null) {
+                XMLSlideShow pptx = new XMLSlideShow();
+                XSLFSlide slide = pptx.createSlide();
+                XSLFSlideLayout layout = slide.getSlideLayout();
+
+                // Get the title placeholder (usually at index 0)
+                XSLFTextShape titleShape = slide.getPlaceholder(0);
+                XSLFTextParagraph titleParagraph = titleShape.getTextParagraphs().get(0);
+                XSLFTextRun titleRun = titleParagraph.getTextRuns().get(0);
+                titleRun.setText("Title Text"); // Set your desired title text
+
+                // Get the content placeholder (usually at index 1)
+                XSLFTextShape contentShape = slide.getPlaceholder(1);
+                XSLFTextParagraph contentParagraph = contentShape.getTextParagraphs().get(0);
+                XSLFTextRun contentRun = contentParagraph.getTextRuns().get(0);
+                contentRun.setText(text); // Set your extracted PDF text
+
+                FileOutputStream out = new FileOutputStream(outputFile);
+                pptx.write(out);
+                out.close();
+
+                messageLabel.setText("PPTX file saved to " + outputFile.getAbsolutePath());
+            } else {
+                messageLabel.setText("Output file not selected.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            messageLabel.setText("Error converting PDF to PPTX.");
+        }
+    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //TODO
         myComboBox.setItems(options);
     }    
-    
     
 }
