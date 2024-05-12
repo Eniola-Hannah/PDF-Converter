@@ -41,6 +41,9 @@ public class FXMLController implements Initializable {
     private ObservableList<String> options = FXCollections.observableArrayList("Docx", "Pptx", "Txt File", "HTML File");
 
     @FXML
+    private Button convertButton;
+    
+    @FXML
     private Label messageLabel;
 
     
@@ -63,27 +66,31 @@ public class FXMLController implements Initializable {
         File inputFile = new File(filePathTextField.getText());
 
         if (selectedOption != null && inputFile.exists()) {
+            // method handleConvertButtonAction
+        } else {
+            messageLabel.setText("No input file selected");
+        }
+    }
+    
+    @FXML
+    private void handleConvertButtonAction(ActionEvent event) {
+        String selectedOption = myComboBox.getValue();
+        File inputFile = new File(filePathTextField.getText());
+
+        if (selectedOption != null && inputFile.exists()) {
             switch (selectedOption) {
                 case "Docx":
-//                    convertToDocx(inputFile);
-                    File outputDocxFile = new File("C:\\Users\\user\\Downloads"); // Specify the output file path
-                    try {
-                        pdftodocx.convertPdfToDocx(inputFile, outputDocxFile);
-                        messageLabel.setText("PDF to DOCX conversion successful!");
-                    } catch (IOException e) {
-                        messageLabel.setText("Error during PDF to DOCX conversion: " + e.getMessage());
-                        e.printStackTrace();
-                    }
+                    messageLabel.setText("...................");
+//                    File outputDocxFile = new File("C:\\Users\\user\\Downloads"); // Specify the output file path
+//                    try {
+//                        pdftodocx.convertPdfToDocx(inputFile, outputDocxFile);
+//                        messageLabel.setText("PDF to DOCX conversion successful!");
+//                    } catch (IOException e) {
+//                        messageLabel.setText("Error during PDF to DOCX conversion: " + e.getMessage());
+//                        e.printStackTrace();
+//                    }
                     break;
-//                case "Pptx":
-//                    convertToPptx(inputFile);
-//                    break;
-//                case "Txt File":
-//                    convertToTxt(inputFile);
-//                    break;
-//                case "HTML File":
-//                    convertToHtml(inputFile);
-//                    break;
+                // Other cases...
                 default:
                     messageLabel.setText("Invalid option selected");
                     break;
@@ -93,13 +100,13 @@ public class FXMLController implements Initializable {
         }
     }
     
+    
+    
     void convertToDocx(File inputFile) {
-    // Perform the conversion logic to convert the input file to a .docx format
-    // You can use external libraries or write your own conversion code here
+ 
 
     messageLabel.setText("Converting to .docx format: " + inputFile.getAbsolutePath()+ "\n.....");
 
-    // Save the converted file or perform any other necessary actions
 }
     
     @Override
