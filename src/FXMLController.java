@@ -4,6 +4,7 @@
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -64,7 +65,15 @@ public class FXMLController implements Initializable {
         if (selectedOption != null && inputFile.exists()) {
             switch (selectedOption) {
                 case "Docx":
-                    convertToDocx(inputFile);
+//                    convertToDocx(inputFile);
+                    File outputDocxFile = new File("C:\\Users\\user\\Downloads"); // Specify the output file path
+                    try {
+                        pdftodocx.convertPdfToDocx(inputFile, outputDocxFile);
+                        messageLabel.setText("PDF to DOCX conversion successful!");
+                    } catch (IOException e) {
+                        messageLabel.setText("Error during PDF to DOCX conversion: " + e.getMessage());
+                        e.printStackTrace();
+                    }
                     break;
 //                case "Pptx":
 //                    convertToPptx(inputFile);
