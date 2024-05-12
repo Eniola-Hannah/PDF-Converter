@@ -4,6 +4,7 @@
  */
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,6 +18,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
  * FXML Controller class
@@ -90,7 +93,25 @@ public class FXMLController implements Initializable {
 //                        e.printStackTrace();
 //                    }
                     break;
-                // Other cases...
+                    
+                case "Txt File":
+                    messageLabel.setText("...................");
+                    String extractedText = extractTextFromPDF(inputFile);
+                    if (extractedText != null) {
+                        // Save the extracted text to a TXT file
+                        String txtFilePath = "C:\\\\Users\\\\user\\\\Downloads"; // Specify the desired output TXT file path
+                        try (FileWriter writer = new FileWriter(txtFilePath)) {
+                            writer.write(extractedText);
+                            messageLabel.setText("Text extracted and saved to " + txtFilePath);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            messageLabel.setText("Error saving text to TXT file.");
+                        }
+                    } else {
+                        messageLabel.setText("Error extracting text from PDF.");
+                    }
+                    break;
+                    
                 default:
                     messageLabel.setText("Invalid option selected");
                     break;
@@ -99,6 +120,19 @@ public class FXMLController implements Initializable {
             messageLabel.setText("No input file selected");
         }
     }
+    
+    private String extractTextFromPDF(File pdfFile) {
+    try {
+        PDDocument document = PDDocument.load(pdfFile);
+        PDFTextStripper stripper = new PDFTextStripper();
+        String text = stripper.getText(document);
+        document.close();
+        return text;
+    } catch (IOException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
     
     
     
