@@ -21,6 +21,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 /**
  * FXML Controller class
@@ -42,7 +45,7 @@ public class FXMLController implements Initializable {
     
     @FXML
     private ComboBox<String> myComboBox;
-    private ObservableList<String> options = FXCollections.observableArrayList("Docx", "Pptx", "Txt File", "HTML File");
+    private ObservableList<String> options = FXCollections.observableArrayList("Txt File", "Docx", "Pptx", "HTML File");
 
     @FXML
     private Button convertButton;
@@ -84,7 +87,7 @@ public class FXMLController implements Initializable {
         if (selectedOption != null && inputFile.exists()) {
             switch (selectedOption) {
                 case "Docx":
-//                    convertToDocx(inputFile);
+                    convertToDocx(inputFile);
                     break;    
                 case "Txt File":
                     convertToText(inputFile);
@@ -114,16 +117,7 @@ public class FXMLController implements Initializable {
         }
     }
     
-//    private void convertToWord(PDDocument document, String outputPath) throws IOException {
-//        messageLabel.setText("...................");
-//        File outputDocxFile = new File("C:\\Users\\user\\Downloads"); // Specify the output file path
-//        try {
-//        pdftodocx.convertPdfToDocx(inputFile, outputDocxFile);
-//        messageLabel.setText("PDF to DOCX conversion successful!");
-//        } catch (IOException e) {
-//        messageLabel.setText("Error during PDF to DOCX conversion: " + e.getMessage());
-//        e.printStackTrace();
-//  }
+
     
     private void convertToText(File inputFile) {
         messageLabel.setText("Converting to Text...");
@@ -150,6 +144,42 @@ public class FXMLController implements Initializable {
             }
         } else {
             messageLabel.setText("Error extracting text from PDF.");
+        }
+    }
+    
+    private void convertToDocx(File inputFile) {
+        messageLabel.setText("Converting to DOCX...");
+        try {
+            PDDocument document = PDDocument.load(inputFile);
+            PDFTextStripper stripper = new PDFTextStripper();
+            String text = stripper.getText(document);
+            document.close();
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save DOCX File");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("DOCX Files", "*.docx")
+            );
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            File outputFile = fileChooser.showSaveDialog(null);
+
+            if (outputFile != null) {
+                XWPFDocument docxDocument = new XWPFDocument();
+                XWPFParagraph paragraph = docxDocument.createParagraph();
+                XWPFRun run = paragraph.createRun();
+                run.setText(text);
+
+                FileOutputStream out = new FileOutputStream(outputFile);
+                docxDocument.write(out);
+                out.close();
+
+                messageLabel.setText("DOCX file saved to " + outputFile.getAbsolutePath());
+            } else {
+                messageLabel.setText("Output file not selected.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            messageLabel.setText("Error converting PDF to DOCX.");
         }
     }
     
