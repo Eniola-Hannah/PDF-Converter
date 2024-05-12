@@ -51,11 +51,11 @@
             <ComboBox fx:id="myComboBox" onAction="#handleComboBoxSelection" prefHeight="35.0" prefWidth="252.0" promptText="Select a Document type..." style="-fx-border-color: white; -fx-border-radius: 10;" />
          </children>
       </HBox>
-      <Button graphicTextGap="5.0" layoutX="217.0" layoutY="299.0" mnemonicParsing="false" style="-fx-background-color: blue;" text="Convert" textFill="WHITE">
+      <Button fx:id="convertButton" graphicTextGap="5.0" layoutX="217.0" layoutY="299.0" mnemonicParsing="false" onAction="#handleConvertButtonAction" style="-fx-background-color: blue;" text="Convert" textFill="WHITE">
          <font>
             <Font name="Century" size="19.0" />
          </font>
       </Button>
-      <Label fx:id="messageLabel" text="WHat is goin gom" />
+      <Label fx:id="messageLabel" />
    </children>
 </AnchorPane>
