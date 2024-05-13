@@ -21,7 +21,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.sl.usermodel.Placeholder;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xslf.usermodel.XSLFShape;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
 import org.apache.poi.xslf.usermodel.XSLFTextParagraph;
@@ -51,7 +53,7 @@ public class FXMLController implements Initializable {
     
     @FXML
     private ComboBox<String> myComboBox;
-    private ObservableList<String> options = FXCollections.observableArrayList("Txt File", "Docx", "Pptx", "HTML File");
+    private ObservableList<String> options = FXCollections.observableArrayList("Txt File", "Docx", "HTML File",  "Pptx");
 
     @FXML
     private Button convertButton;
@@ -252,17 +254,19 @@ public class FXMLController implements Initializable {
                 XSLFSlide slide = pptx.createSlide();
                 XSLFSlideLayout layout = slide.getSlideLayout();
 
-                // Get the title placeholder (usually at index 0)
-                XSLFTextShape titleShape = slide.getPlaceholder(0);
-                XSLFTextParagraph titleParagraph = titleShape.getTextParagraphs().get(0);
-                XSLFTextRun titleRun = titleParagraph.getTextRuns().get(0);
-                titleRun.setText("Title Text"); // Set your desired title text
-
-                // Get the content placeholder (usually at index 1)
-                XSLFTextShape contentShape = slide.getPlaceholder(1);
-                XSLFTextParagraph contentParagraph = contentShape.getTextParagraphs().get(0);
-                XSLFTextRun contentRun = contentParagraph.getTextRuns().get(0);
-                contentRun.setText(text); // Set your extracted PDF text
+                // Find title and content placeholders dynamically
+                for (XSLFShape shape : slide.getShapes()) {
+                    if (shape instanceof XSLFTextShape) {
+                        XSLFTextShape textShape = (XSLFTextShape) shape;
+                        if (textShape.getTextType() == Placeholder.TITLE) {
+                            textShape.setText("Title Text"); // Set your desired title text
+                        } else if (textShape.getTextType() == Placeholder.BODY) {
+                            XSLFTextParagraph paragraph = textShape.addNewTextParagraph();
+                            XSLFTextRun run = paragraph.addNewTextRun();
+                            run.setText(text); // Set your extracted PDF text
+                        }
+                    }
+                }
 
                 FileOutputStream out = new FileOutputStream(outputFile);
                 pptx.write(out);
@@ -277,8 +281,8 @@ public class FXMLController implements Initializable {
             messageLabel.setText("Error converting PDF to PPTX.");
         }
     }
-
-
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //TODO
